@@ -15,7 +15,7 @@ class CreateKendaraanTable extends Migration
     {
         Schema::create('kendaraan', function (Blueprint $table) {
             $table->id('id_kendaraan');
-            $table->integer('id_jenis_kendaraan');
+            $table->string('jenis_kendaraan', 10);
             $table->string('plat_kendaraan', 20)->index();
             $table->string('foto_kendaraan', 20);
             $table->string('status_kendaraan');

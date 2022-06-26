@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Kendaraan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class KendaraanController extends Controller
 {
@@ -14,7 +16,7 @@ class KendaraanController extends Controller
      */
     public function index()
     {
-        $kendaraan = $kendaraan = DB::table('kendaraan')->get(); // Mengambil semua isi tabel
+        $kendaraan = DB::table('kendaraan')->get(); // Mengambil semua isi tabel
         $posts = Kendaraan::orderBy('plat_kendaraan', 'desc')->paginate(6);
         return view('kendaraan.index', compact('kendaraan'));
         with('i', (request()->input('page', 1) - 1) * 5);
@@ -39,7 +41,7 @@ class KendaraanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'id_jenis_kendaraan' => 'required',
+            'jenis_kendaraan' => 'required',
             'plat_kendaraan' => 'required',
             'foto_kendaraan' => 'required',
             'status_kendaraan' => 'required',
@@ -83,7 +85,7 @@ class KendaraanController extends Controller
     public function update(Request $request, $plat_kendaraan)
     {
         $request->validate([
-            'id_jenis_kendaraan' => 'required',
+            'jenis_kendaraan' => 'required',
             'plat_kendaraan' => 'required',
             'foto_kendaraan' => 'required',
             'status_kendaraan' => 'required',
