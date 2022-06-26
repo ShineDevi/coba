@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 
 class KendaraanController extends Controller
@@ -13,7 +14,10 @@ class KendaraanController extends Controller
      */
     public function index()
     {
-        //
+        $kendaraan = $kendaraan = DB::table('kendaraan')->get(); // Mengambil semua isi tabel
+        $posts = Kendaraan::orderBy('plat_kendaraan', 'desc')->paginate(6);
+        return view('kendaraan.index', compact('kendaraan'));
+        with('i', (request()->input('page', 1) - 1) * 5);
     }
 
     /**
@@ -23,7 +27,7 @@ class KendaraanController extends Controller
      */
     public function create()
     {
-        //
+        return view('kendaraan.create');
     }
 
     /**
@@ -34,7 +38,15 @@ class KendaraanController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'id_jenis_kendaraan' => 'required',
+            'plat_kendaraan' => 'required',
+            'foto_kendaraan' => 'required',
+            'status_kendaraan' => 'required',
+        ]);
+        Kendaraan::create($request->all());
+        return redirect()->route('kendaraan.index')->with('success', 'Kendaraan Berhasil Ditambahkan');
+
     }
 
     /**
@@ -43,9 +55,10 @@ class KendaraanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($plat_kendaraan)
     {
-        //
+        $Kendaraan = Kendaraan::find($plat_kendaraan);
+        return view('kendaraan.detail', compact('Kendaraan'));
     }
 
     /**
@@ -54,9 +67,10 @@ class KendaraanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($plat_kendaraan)
     {
-        //
+        $Kendaraan = DB::table('kendaraan')->where('plat_kendaraan', $plat_kendaraan)->first();;
+        return view('kendaraan.edit', compact('Kendaraan'));
     }
 
     /**
@@ -66,9 +80,16 @@ class KendaraanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $plat_kendaraan)
     {
-        //
+        $request->validate([
+            'id_jenis_kendaraan' => 'required',
+            'plat_kendaraan' => 'required',
+            'foto_kendaraan' => 'required',
+            'status_kendaraan' => 'required',
+        ]);
+        Kendaraan::find($plat_nomor)->update($request->all());
+        return redirect()->route('kendaraan.index')->with('success', 'Kendaraan Berhasil Diupdate');
     }
 
     /**
@@ -77,8 +98,9 @@ class KendaraanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($plat_kendaraan)
     {
-        //
+        Kendaraan::find($plat_kendaraan)->delete();
+        return redirect()->route('kendaraan.index')-> with('success', 'Kendaraan Berhasil Dihapus');
     }
 }
